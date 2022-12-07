@@ -22,7 +22,9 @@ def main():
     make_solution_file(day)
 
     # Ideally, I want to also get the input file and save to `input/dayDD.txt`.
-    # Haven't figured out how to do that yet though
+    # Haven't figured out how to do that yet though.
+    # For now, just make an empty file.
+    make_input_file(day)
 
 
 # Get problem and save to file `problems/dayDD.txt`
@@ -67,6 +69,7 @@ def get_problem(day):
     else:
         print(f"File {file_path} already exists with longer text content. Not overwriting.")
 
+# Make an empty solution file at `dayDD.py`
 def make_solution_file(day):
 
     file_path = f"day{day:0>2}.py"
@@ -76,7 +79,8 @@ def make_solution_file(day):
             f.write(f"""# Advent of Code 2022 - Day {day} solution
 
 def main():
-    pass
+    with open("{input_file_path(day)}") as f:
+        pass
 
 if __name__ == "__main__":
     main()       
@@ -85,7 +89,21 @@ if __name__ == "__main__":
     else:
         print(f"Solution file already exists at {file_path}. Not overwriting.")
 
+# Make an empty input file at `input/dayDD.txt`
+def make_input_file(day):
 
+    file_path = input_file_path(day)
+
+    if not os.path.exists(file_path):
+        with open(file_path, "w") as f:
+            f.write("")
+        print(f"Created empty input file at {file_path}.")
+    else:
+        print(f"Input file already exists at {file_path}. Not overwriting.")
+
+def input_file_path(day):
+    return f"input/day{day:0>2}.txt"
 
 if __name__ == "__main__":
     main()
+    
