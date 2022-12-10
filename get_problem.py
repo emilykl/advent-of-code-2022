@@ -1,9 +1,10 @@
 import datetime
 import os
-import sys 
+import sys
 
 from bs4 import BeautifulSoup
 import requests
+
 
 def main():
 
@@ -50,7 +51,7 @@ def get_problem(day):
 
     # Write to file
     # Note: This will overwrite the existing problem file ONLY if
-    # the new text is longer than the existing text 
+    # the new text is longer than the existing text
     file_path = f"problems/day{day:0>2}.txt"
 
     if os.path.exists(file_path):
@@ -67,7 +68,10 @@ def get_problem(day):
             f.write(problem_text)
         print(f"Day {day} problem statement written to {file_path}.")
     else:
-        print(f"File {file_path} already exists with longer text content. Not overwriting.")
+        print(
+            f"File {file_path} already exists with longer text content. Not overwriting."
+        )
+
 
 # Make an empty solution file at `dayDD.py`
 def make_solution_file(day):
@@ -76,7 +80,8 @@ def make_solution_file(day):
 
     if not os.path.exists(file_path):
         with open(file_path, "w") as f:
-            f.write(f"""# Advent of Code 2022 - Day {day} solution
+            f.write(
+                f"""# Advent of Code 2022 - Day {day} solution
 
 def main():
     with open("{input_file_path(day)}") as f:
@@ -84,10 +89,12 @@ def main():
 
 if __name__ == "__main__":
     main()       
-""")
+"""
+            )
         print(f"Created empty solution file at {file_path}.")
     else:
         print(f"Solution file already exists at {file_path}. Not overwriting.")
+
 
 # Make an empty input file at `input/dayDD.txt`
 def make_input_file(day):
@@ -101,9 +108,10 @@ def make_input_file(day):
     else:
         print(f"Input file already exists at {file_path}. Not overwriting.")
 
+
 def input_file_path(day):
     return f"input/day{day:0>2}.txt"
 
+
 if __name__ == "__main__":
     main()
-    

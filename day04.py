@@ -1,25 +1,23 @@
-
-
 def fully_contains(a1, a2):
 
     a1_start, a1_end = a1.split("-")
     a2_start, a2_end = a2.split("-")
 
-    if ((int(a1_start) <= int(a2_start) and int(a1_end) >= int(a2_end)) or 
-        (int(a2_start) <= int(a1_start) and int(a2_end) >= int(a1_end))):
+    if (int(a1_start) <= int(a2_start) and int(a1_end) >= int(a2_end)) or (
+        int(a2_start) <= int(a1_start) and int(a2_end) >= int(a1_end)
+    ):
         print(f"Pairing {a1} : {a2} is fully contained!")
         return True
     return False
+
 
 def has_overlap(a1, a2):
 
     a1_start, a1_end = a1.split("-")
     a2_start, a2_end = a2.split("-")
 
-    overlap = set(
-        range(int(a1_start), int(a1_end)+1)
-    ).intersection(
-        range(int(a2_start), int(a2_end)+1)
+    overlap = set(range(int(a1_start), int(a1_end) + 1)).intersection(
+        range(int(a2_start), int(a2_end) + 1)
     )
 
     if len(overlap) > 0:

@@ -1,8 +1,7 @@
-
 with open("input/day01.txt") as f:
     text = f.read()
 
-chunks = text.split("\n\n") 
+chunks = text.split("\n\n")
 inventories = [chunk.split("\n") for chunk in chunks]
 totals = [sum([int(v) for v in values]) for values in inventories]
 max_elf = totals.index(max(totals))

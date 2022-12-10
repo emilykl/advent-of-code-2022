@@ -3,6 +3,7 @@
 import json
 import os
 
+
 def main():
 
     state = "", {}
@@ -38,22 +39,20 @@ def main():
 
         # Find size of smallest directory larger than `addl_space_needed`
         filtered_dir_sizes_pt_2 = [
-            item for item in all_dir_sizes 
-            if item[1] >= addl_space_needed
+            item for item in all_dir_sizes if item[1] >= addl_space_needed
         ]
         size_of_dir_to_delete = min([item[1] for item in filtered_dir_sizes_pt_2])
 
         # Print answer to Part Two
         print(f"Size of dir to delete: {size_of_dir_to_delete}")
 
+
 def print_state(state):
     curr_path, curr_size_info = state
 
     print(f"path: {curr_path}\n")
     print(f"size_info:")
-    print(
-        json.dumps(curr_size_info,sort_keys=True, indent=4)
-    )
+    print(json.dumps(curr_size_info, sort_keys=True, indent=4))
     print("")
 
 
@@ -64,13 +63,13 @@ def split_into_chunks(text):
     # Append index of the line following the last line, to make logic work
     user_input_lines = [i for i, line in enumerate(lines) if line.startswith("$")]
     user_input_lines.append(len(lines))
-    
+
     # Split into chunks, where each chunk consists of a user input
     # followed by the terminal output
     return [
-        lines[start:end] for start, end 
-        in zip(user_input_lines, user_input_lines[1:])
+        lines[start:end] for start, end in zip(user_input_lines, user_input_lines[1:])
     ]
+
 
 # Update the current state based on the info in `chunk`
 def update_state(state, chunk):
@@ -93,14 +92,14 @@ def update_state(state, chunk):
             new_path = ["/"]
         else:
             new_path = curr_path + [new_dirname]
-    
+
     # Process `ls` command
     elif chunk_type == "ls":
 
         # Current path doesn't change
         new_path = curr_path.copy()
 
-        # Copy sizes dictionary, then drill down until 
+        # Copy sizes dictionary, then drill down until
         # you get to current path
         new_size_info = curr_size_info.copy()
         dir_pointer = new_size_info
@@ -122,10 +121,12 @@ def update_state(state, chunk):
 def get_chunk_type(chunk):
     return chunk[0].split(" ")[1]
 
+
 # Calculate all dir sizes, given structured dict of all file sizes
 def calculate_all_dir_sizes(size_info, curr_path="", dir_sizes=[]):
     _, dir_size_master_list = dir_size("/", size_info["/"], [])
     return dir_size_master_list
+
 
 # Recursive function for calculating total size of directory given contents
 def dir_size(dir_path, contents, dir_size_master_list):
@@ -143,13 +144,12 @@ def dir_size(dir_path, contents, dir_size_master_list):
                 subdir_path = f"{dir_path}/{filename}" if dir_path else filename
 
             subdir_size, dir_size_master_list = dir_size(
-                subdir_path, 
-                size_or_contents,
-                dir_size_master_list
+                subdir_path, size_or_contents, dir_size_master_list
             )
             size += subdir_size
     dir_size_master_list.append((dir_path, size))
     return size, dir_size_master_list
 
+
 if __name__ == "__main__":
-    main()       
+    main()
