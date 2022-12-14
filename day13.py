@@ -4,16 +4,21 @@ from functools import cmp_to_key
 
 import json
 
-verbose = True
+verbose = False
 
 
-def log(msg):
+def log(msg, d=0):
     if verbose:
-        print(msg)
+        pad = "|   " * d
+        if len(pad) > 0:
+            pad = pad[:-2] + "* "
+        print(pad + msg)
 
 
 def main():
     with open("input/day13.txt") as f:
+
+        correct_order_func = correct_order_v if verbose else correct_order
 
         # Part One
         chunks = f.read().split("\n\n")
@@ -23,15 +28,16 @@ def main():
         correct = []
         for i, (p1, p2) in enumerate(packet_pairs):
             log(f"============ Pair {i+1} ============")
-            if correct_order(p1, p2) == 1:
+            co = correct_order_func(p1, p2)
+            if co == 1:
                 log(f"* Pair {i+1} is in the right order *")
                 correct.append(i + 1)
-            elif correct_order(p1, p2) == -1:
+            elif co == -1:
                 log(f"* Pair {i+1} is NOT in the right order *")
             else:
                 # Will this ever happen? I hope not. Alg is not defined for this case.
                 raise ValueError(f"Impossible to determine order of {p1} and {p2}.")
-            log("====================================")
+            log("==================================")
 
         print(f"Sum (Part One answer): {sum(correct)}")
 
@@ -100,58 +106,53 @@ def correct_order(left, right):
 
 
 # Logically equivalent to the above function (I think), but with more comments and print statments
-def correct_order_verbose(left, right):
+def correct_order_v(left, right, d=0):
     if isinstance(left, int):
         if isinstance(right, int):
             # Both are ints
             if left < right:
-                log(f"{left} and {right} are both ints, and {left} < {right}. Returning 1.")  # fmt: skip
+                log(f"{left} and {right} are both ints, and {left} < {right}. Returning 1.", d)  # fmt: skip
                 return 1
             elif left > right:
-                log(f"{left} and {right} are both ints, and {left} > {right}. Returning -1.")  # fmt: skip
+                log(f"{left} and {right} are both ints, and {left} > {right}. Returning -1.", d)  # fmt: skip
                 return -1
             else:
-                log(f"{left} and {right} are both ints, and {left} = {right}. Returning 0. (Indeterminate)")  # fmt: skip
+                log(f"{left} and {right} are both ints, and {left} = {right}. Returning 0. (Indeterminate)", d)  # fmt: skip
                 return 0
         else:
             # Left is int, right is list
-            log(f"{left} is an int and {right} is a list. Comparing {[left]} and {right}.")  # fmt: skip
-            return correct_order([left], right)
+            log(f"{left} is an int and {right} is a list. Comparing {[left]} and {right}.", d)  # fmt: skip
+            return correct_order_v([left], right, d + 1)
     else:
         if isinstance(right, int):
             # Left is list, right is int
-            log(f"{left} is a list and {right} is an int. Comparing {left} and {[right]}.")  # fmt: skip
-            return correct_order(left, [right])
+            log(f"{left} is a list and {right} is an int. Comparing {left} and {[right]}.", d)  # fmt: skip
+            return correct_order_v(left, [right], d + 1)
         else:
             # Both are lists
-            log(f"Comparing corresponding items in {left} and {right}...")
+            log(f"Comparing corresponding items in {left} and {right}...", d)
             for idx in range(max(len(left), len(right))):
 
                 if idx == len(left):
                     if idx < len(right):
-                        log("...End of left list reached, but right list still has items. Returning 1.")  # fmt: skip
+                        log("...End of left list reached, but right list still has items. Returning 1.", d)  # fmt: skip
                         return 1
                     else:
                         break
                 elif idx == len(right):
                     if idx < len(left):
-                        log("...End of right list reached, but left list still has items. Returning -1.")  # fmt: skip
+                        log("...End of right list reached, but left list still has items. Returning -1.", d)  # fmt: skip
                         return -1
                     else:
                         break
+                log(f"...Comparing {left[idx]} and {right[idx]}", d)
 
-                result = correct_order(left[idx], right[idx])
-                if result == 1:
-                    log(f"...{left[idx]} and {right[idx]} are in the correct order, so returning 1.")  # fmt: skip
-                    return 1
-                elif result == -1:
-                    log(f"...{left[idx]} and {right[idx]} are not in the correct order, so returning -1.")  # fmt: skip
-                    return -1
-                else:
-                    log(f"...{left[idx]} = {right[idx]}, so continuing on to look at the next item in the list.")  # fmt: skip
+                result = correct_order_v(left[idx], right[idx], d + 1)
+                if result:
+                    return result
 
             # What happens if we reach the end of the list and haven't made a decision?
-            log(f"...{left} and {right} have indetermine ordering, so returning 0.")
+            log(f"...{left} and {right} have indeterminate ordering, so returning 0.", d)  # fmt: skip
             return 0
 
 
