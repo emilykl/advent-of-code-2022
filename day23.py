@@ -36,8 +36,6 @@ def main():
         move_funcs = move_funcs[1:] + [move_funcs[0]]
         nmoves = len(filtered_moves)
         rounds_finished += 1
-        if rounds_finished % 10 == 0:
-            print(f"Finished Round {rounds_finished}")
 
     print(f"Part Two: In Round {rounds_finished}, no elves moved.")
 
